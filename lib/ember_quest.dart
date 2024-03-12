@@ -11,8 +11,12 @@ import 'objects/platform_block.dart';
 import 'objects/star.dart';
 import 'package:flutter/material.dart';
 
+import 'overlays/hud.dart';
+
 class EmberQuestGame extends FlameGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
+  int starsCollected = 0;
+  int health = 3;
   late EmberPlayer _ember;
   double objectSpeed = 0.0;
   late double lastBlockXPosition = 0.0;
@@ -90,5 +94,6 @@ class EmberQuestGame extends FlameGame
       position: Vector2(128, canvasSize.y - 128),
     );
     world.add(_ember);
+    camera.viewport.add(Hud());
   }
 }

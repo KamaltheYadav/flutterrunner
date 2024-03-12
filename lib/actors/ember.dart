@@ -26,6 +26,7 @@ class EmberPlayer extends SpriteAnimationComponent
 // to make it blink.
   void hit() {
     if (!hitByEnemy) {
+      game.health--;
       hitByEnemy = true;
     }
     add(
@@ -33,7 +34,7 @@ class EmberPlayer extends SpriteAnimationComponent
         EffectController(
           alternate: true,
           duration: 0.1,
-          repeatCount: 6,
+          repeatCount: 5,
         ),
       )..onComplete = () {
           hitByEnemy = false;
@@ -138,6 +139,7 @@ class EmberPlayer extends SpriteAnimationComponent
     }
     if (other is Star) {
       other.removeFromParent();
+      game.starsCollected++;
     }
 
     if (other is WaterEnemy) {
