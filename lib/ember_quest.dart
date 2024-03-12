@@ -40,8 +40,31 @@ class EmberQuestGame extends FlameGame
     ]);
 
     camera.viewfinder.anchor = Anchor.topLeft;
+    initializeGame(true);
+  }
 
-    initializeGame();
+  void initializeGame(bool loadHud) {
+    // Assume that size.x < 3200
+    final segmentsToLoad = (size.x / 640).ceil();
+    segmentsToLoad.clamp(0, segments.length);
+
+    for (var i = 0; i <= segmentsToLoad; i++) {
+      loadGameSegments(i, (640 * i).toDouble());
+    }
+
+    _ember = EmberPlayer(
+      position: Vector2(128, canvasSize.y - 128),
+    );
+    add(_ember);
+    if (loadHud) {
+      add(Hud());
+    }
+  }
+
+  void reset() {
+    starsCollected = 0;
+    health = 3;
+    initializeGame(false);
   }
 
   void loadGameSegments(int segmentIndex, double xPositionOffset) {
@@ -81,19 +104,11 @@ class EmberQuestGame extends FlameGame
     }
   }
 
-  void initializeGame() {
-    // Assume that size.x < 3200
-    final segmentsToLoad = (size.x / 640).ceil();
-    segmentsToLoad.clamp(0, segments.length);
-
-    for (var i = 0; i <= segmentsToLoad; i++) {
-      loadGameSegments(i, (640 * i).toDouble());
+  @override
+  void update(double dt) {
+    if (health <= 0) {
+      overlays.add('GameOver');
     }
-
-    _ember = EmberPlayer(
-      position: Vector2(128, canvasSize.y - 128),
-    );
-    world.add(_ember);
-    camera.viewport.add(Hud());
+    super.update(dt);
   }
 }
